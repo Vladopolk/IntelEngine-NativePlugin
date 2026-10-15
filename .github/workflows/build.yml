@@ -46,7 +46,7 @@ jobs:
         working-directory: SKSE
         continue-on-error: true
         run: |
-          cmake --build build --config Release 2>&1 | Tee-Object -FilePath ../out/build.log
+          cmake --build build --config Release -- -k 0 2>&1 | Tee-Object -FilePath ../out/build.log
           if ($LASTEXITCODE -ne 0) { exit 1 }
 
       - name: Collect outputs

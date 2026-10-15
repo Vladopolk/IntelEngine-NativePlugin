@@ -954,8 +954,10 @@ namespace IntelEngine::Papyrus {
         int bestNameScore = 999;
 
         // Iterate through cell references
-        // Note: CommonLibSSE-NG ForEachReference takes TESObjectREFR& (reference), not pointer
-        cell->ForEachReference([&](RE::TESObjectREFR& ref) -> RE::BSContainer::ForEachResult {
+        // Note: CommonLibSSE-NG (v12+) ForEachReference takes TESObjectREFR* (pointer)
+        cell->ForEachReference([&](RE::TESObjectREFR* ref_p) -> RE::BSContainer::ForEachResult {
+            if (!ref_p) return RE::BSContainer::ForEachResult::kContinue;
+            RE::TESObjectREFR& ref = *ref_p;
             if (&ref == akActor) {
                 return RE::BSContainer::ForEachResult::kContinue;
             }
@@ -1551,9 +1553,9 @@ namespace IntelEngine::Papyrus {
             if (!pkg) continue;
             auto type = pkg->packData.packType.get();
             // Anything other than sandbox/wander/doNothing counts as "schedule" AI
-            if (type != RE::PACKAGE_PROCEDURE_TYPE::kSandbox &&
-                type != RE::PACKAGE_PROCEDURE_TYPE::kWander &&
-                type != RE::PACKAGE_PROCEDURE_TYPE::kDoNothing) {
+            if (type != RE::PACKAGE_TYPE::kSandbox &&
+                type != RE::PACKAGE_TYPE::kWander &&
+                type != RE::PACKAGE_TYPE::kDoNothing) {
                 logger::info("HasNonSandboxAI({}): TRUE — found package type {}",
                             akActor->GetDisplayFullName(), static_cast<int>(type));
                 return true;
@@ -1654,7 +1656,9 @@ namespace IntelEngine::Papyrus {
         auto markerPos = questLocation->GetPosition();
         bool found = false;
 
-        cell->ForEachReference([&](RE::TESObjectREFR& doorRef) {
+        cell->ForEachReference([&](RE::TESObjectREFR* doorRef_p) {
+            if (!doorRef_p) return RE::BSContainer::ForEachResult::kContinue;
+            RE::TESObjectREFR& doorRef = *doorRef_p;
             if (found) return RE::BSContainer::ForEachResult::kStop;
             if (doorRef.IsDisabled()) return RE::BSContainer::ForEachResult::kContinue;
 
@@ -3521,7 +3525,9 @@ namespace IntelEngine::Papyrus {
         RE::TESObjectREFR* coffin = nullptr;
         RE::TESObjectREFR* shrine = nullptr;
 
-        cell->ForEachReference([&](RE::TESObjectREFR& ref) {
+        cell->ForEachReference([&](RE::TESObjectREFR* ref_p) {
+            if (!ref_p) return RE::BSContainer::ForEachResult::kContinue;
+            RE::TESObjectREFR& ref = *ref_p;
             if (ref.IsDisabled()) return RE::BSContainer::ForEachResult::kContinue;
 
             auto* baseObj = ref.GetBaseObject();
@@ -3634,7 +3640,9 @@ namespace IntelEngine::Papyrus {
 
         const char* tag = furnitureOnly ? "UsablePrisonerScan" : "PrisonerScan";
 
-        cell->ForEachReference([&](RE::TESObjectREFR& ref) {
+        cell->ForEachReference([&](RE::TESObjectREFR* ref_p) {
+            if (!ref_p) return RE::BSContainer::ForEachResult::kContinue;
+            RE::TESObjectREFR& ref = *ref_p;
             if (ref.IsDisabled()) return RE::BSContainer::ForEachResult::kContinue;
 
             auto* baseObj = ref.GetBaseObject();
@@ -3702,7 +3710,9 @@ namespace IntelEngine::Papyrus {
         RE::TESObjectREFR* coffin = nullptr;
         RE::TESObjectREFR* shrine = nullptr;
 
-        cell->ForEachReference([&](RE::TESObjectREFR& ref) {
+        cell->ForEachReference([&](RE::TESObjectREFR* ref_p) {
+            if (!ref_p) return RE::BSContainer::ForEachResult::kContinue;
+            RE::TESObjectREFR& ref = *ref_p;
             if (ref.IsDisabled()) return RE::BSContainer::ForEachResult::kContinue;
             auto* baseObj = ref.GetBaseObject();
             if (!baseObj) return RE::BSContainer::ForEachResult::kContinue;
