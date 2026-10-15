@@ -1,0 +1,53 @@
+name: Build IntelEngine.dll
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "fix/**" ]
+
+jobs:
+  build:
+    runs-on: windows-2022
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Probe CommonLib registry
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          git clone --filter=blob:none https://gitlab.com/colorglass/vcpkg-colorglass reg
+          Set-Location reg
+          git log -8 --format='%h %ad %s' --date=short -- ports/commonlibsse-ng
+          Get-Content ports/commonlibsse-ng/vcpkg.json
+          Get-Content ports/commonlibsse-ng/portfile.cmake
+          git rev-parse HEAD
+
+      - name: Configure
+        shell: pwsh
+        working-directory: SKSE
+        run: |
+          $tc = "$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
+          cmake -B build -S . -G Ninja `
+            -DCMAKE_BUILD_TYPE=Release `
+            "-DCMAKE_TOOLCHAIN_FILE=$tc" `
+            -DVCPKG_TARGET_TRIPLET=x64-windows-static `
+            -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded
+
+      - name: Build
+        shell: pwsh
+        working-directory: SKSE
+        run: cmake --build build --config Release
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: IntelEngine-dll
+          path: |
+            SKSE/build/IntelEngine.dll
+            SKSE/build/vcpkg-manifest-install.log
+          if-no-files-found: warn
