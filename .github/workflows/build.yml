@@ -14,6 +14,8 @@ jobs:
     timeout-minutes: 150
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: true
 
       - uses: ilammy/msvc-dev-cmd@v1
         with:
@@ -22,33 +24,6 @@ jobs:
       - name: Prepare report dir
         shell: pwsh
         run: New-Item -ItemType Directory -Force -Path out | Out-Null
-
-      - name: Probe CommonLib registry and bump baselines
-        shell: pwsh
-        continue-on-error: true
-        run: |
-          $r = "out/report.txt"
-          git clone --filter=blob:none https://gitlab.com/colorglass/vcpkg-colorglass reg 2>&1 | Out-File $r
-          Push-Location reg
-          "== registry HEAD ==" | Out-File ../$r -Append
-          git rev-parse HEAD | Out-File ../$r -Append
-          $regHead = (git rev-parse HEAD).Trim()
-          "== log for port ==" | Out-File ../$r -Append
-          git log -10 --format='%h %ad %s' --date=short -- ports/commonlibsse-ng | Out-File ../$r -Append
-          "== vcpkg.json ==" | Out-File ../$r -Append
-          Get-Content ports/commonlibsse-ng/vcpkg.json | Out-File ../$r -Append
-          "== portfile ==" | Out-File ../$r -Append
-          Get-Content ports/commonlibsse-ng/portfile.cmake | Out-File ../$r -Append
-          Pop-Location
-          $vcHead = ((git ls-remote https://github.com/microsoft/vcpkg HEAD) -split "\s+")[0]
-          "== vcpkg HEAD ==`n$vcHead" | Out-File $r -Append
-          $p = "SKSE/vcpkg-configuration.json"
-          $j = Get-Content $p -Raw | ConvertFrom-Json
-          $j.registries[0].baseline = $regHead
-          $j.'default-registry'.baseline = $vcHead
-          $j | ConvertTo-Json -Depth 10 | Set-Content $p
-          "== new vcpkg-configuration.json ==" | Out-File $r -Append
-          Get-Content $p | Out-File $r -Append
 
       - name: Configure
         id: configure
@@ -62,6 +37,7 @@ jobs:
             "-DCMAKE_TOOLCHAIN_FILE=$tc" `
             -DVCPKG_TARGET_TRIPLET=x64-windows-static `
             -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded 2>&1 | Tee-Object -FilePath ../out/configure.log
+          if ($LASTEXITCODE -ne 0) { exit 1 }
 
       - name: Build
         id: build
@@ -69,21 +45,24 @@ jobs:
         shell: pwsh
         working-directory: SKSE
         continue-on-error: true
-        run: cmake --build build --config Release 2>&1 | Tee-Object -FilePath ../out/build.log
+        run: |
+          cmake --build build --config Release 2>&1 | Tee-Object -FilePath ../out/build.log
+          if ($LASTEXITCODE -ne 0) { exit 1 }
 
       - name: Collect outputs
         if: always()
         shell: pwsh
         run: |
-          "configure=${{ steps.configure.outcome }} build=${{ steps.build.outcome }}" | Out-File out/report.txt -Append
+          "configure=${{ steps.configure.outcome }} build=${{ steps.build.outcome }} sha=${{ github.sha }}" | Out-File out/report.txt
           if (Test-Path SKSE/build/IntelEngine.dll) { Copy-Item SKSE/build/IntelEngine.dll out/IntelEngine.dll }
-          Get-ChildItem SKSE/build/vcpkg_installed/vcpkg/info -Filter 'commonlib*' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name | Out-File out/report.txt -Append
-          # keep only the tail of long logs so they fit in git
           foreach ($f in 'configure.log','build.log') {
-            if (Test-Path "out/$f") { Get-Content "out/$f" -Tail 300 | Set-Content "out/$f.tail.txt"; Remove-Item "out/$f" }
+            if (Test-Path "out/$f") {
+              Select-String -Path "out/$f" -Pattern 'error C\d+|error:|fatal error|FAILED:|CMake Error|LNK\d+' | Select-Object -First 250 | ForEach-Object { $_.Line } | Set-Content "out/$f.errors.txt"
+              Get-Content "out/$f" -Tail 80 | Set-Content "out/$f.tail.txt"
+              Remove-Item "out/$f"
+            }
           }
-          Get-ChildItem SKSE/build -Recurse -Filter 'vcpkg-manifest-install.log' -ErrorAction SilentlyContinue | Select-Object -First 1 | ForEach-Object { Get-Content $_.FullName -Tail 200 | Set-Content out/vcpkg-install.tail.txt }
-          Get-ChildItem SKSE/build/vcpkg_installed/vcpkg/blds -Recurse -Filter '*.log' -ErrorAction SilentlyContinue | Select-Object -First 3 | ForEach-Object { Get-Content $_.FullName -Tail 120 | Set-Content ("out/" + $_.Name + ".tail.txt") }
+          Get-ChildItem SKSE/build -Recurse -Filter 'vcpkg-manifest-install.log' -ErrorAction SilentlyContinue | Select-Object -First 1 | ForEach-Object { Get-Content $_.FullName -Tail 120 | Set-Content out/vcpkg-install.tail.txt }
 
       - name: Publish outputs to ci-artifacts branch
         if: always()

@@ -5,10 +5,15 @@
   "description": "Intelligent NPC Task Execution for SkyrimNet",
   "license": "MIT",
   "dependencies": [
-    "commonlibsse-ng",
     "fmt",
-    "rapidfuzz",
     "nlohmann-json",
-    "sqlite3"
+    "sqlite3",
+    "spdlog",
+    "directxmath",
+    "directxtk",
+    "rapidcsv",
+    "simpleini",
+    "toml11",
+    "xbyak"
   ]
 }

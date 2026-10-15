@@ -18,9 +18,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Dependencies (via vcpkg)
 # =============================================================================
 
-find_package(CommonLibSSE CONFIG REQUIRED)
+# CommonLibSSE-NG (maintained fork with Skyrim 1.7.x / Address Library v5 support),
+# consumed as a git submodule instead of the abandoned vcpkg-colorglass registry.
+set(BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ENABLE_SKYRIM_VR OFF CACHE BOOL "" FORCE)
+add_subdirectory(lib/commonlibsse-ng CommonLibSSE EXCLUDE_FROM_ALL)
+if(NOT COMMAND add_commonlibsse_plugin)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/lib/commonlibsse-ng/cmake/CommonLibSSE.cmake)
+endif()
+
 find_package(fmt CONFIG REQUIRED)
-find_package(rapidfuzz CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(unofficial-sqlite3 CONFIG REQUIRED)
 
@@ -74,7 +81,6 @@ target_link_libraries(
     ${PROJECT_NAME}
     PRIVATE
         fmt::fmt
-        rapidfuzz::rapidfuzz
         nlohmann_json::nlohmann_json
         unofficial::sqlite3::sqlite3
 )
