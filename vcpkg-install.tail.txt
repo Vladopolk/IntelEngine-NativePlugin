@@ -1,0 +1,120 @@
+-- Using cached msys2-mingw-w64-x86_64-pkgconf-1~3.0.7-1-any.pkg.tar.zst
+-- Using cached msys2-msys2-runtime-3.6.10-4-x86_64.pkg.tar.zst
+-- Using msys root at C:/vcpkg/downloads/tools/msys2/d5586eb050429df1
+-- Fixing pkgconfig file: C:/vcpkg/packages/sqlite3_x64-windows-static/debug/lib/pkgconfig/sqlite3.pc
+-- Installing: C:/vcpkg/packages/sqlite3_x64-windows-static/share/sqlite3/usage
+-- Performing post-build validation
+Starting submission of sqlite3[core,json1]:x64-windows-static@3.53.4 to 1 binary cache(s) in the background
+Elapsed time to handle sqlite3:x64-windows-static: 19 s
+Completed submission of spdlog[core,fmt,tz-offset]:x64-windows-static@1.17.0#1 to 1 binary cache(s) in 1.4 s
+Installing 11/12 toml11:x64-windows-static@4.4.0...
+toml11:x64-windows-static@4.4.0 package ABI: b9afcd1e6237e5ee580bddd95f8aa882957e7289c5ee99323d5fd639a1edd83e
+Building toml11:x64-windows-static@4.4.0...
+C:\Users\runneradmin\AppData\Local\vcpkg\registries\git-trees\c4b423ef3f1700c7b9edf35e53cbfacb372108c9: info: installing from git registry git+https://github.com/microsoft/vcpkg@c4b423ef3f1700c7b9edf35e53cbfacb372108c9
+Downloading https://github.com/ToruNiina/toml11/archive/v4.4.0.tar.gz -> ToruNiina-toml11-v4.4.0.tar.gz
+Successfully downloaded ToruNiina-toml11-v4.4.0.tar.gz
+-- Extracting source C:/vcpkg/downloads/ToruNiina-toml11-v4.4.0.tar.gz
+-- Using source at C:/vcpkg/buildtrees/toml11/src/v4.4.0-e6c50d7814.clean
+-- Configuring x64-windows-static
+-- Building x64-windows-static-dbg
+-- Building x64-windows-static-rel
+-- Installing: C:/vcpkg/packages/toml11_x64-windows-static/share/toml11/copyright
+-- Performing post-build validation
+Starting submission of toml11:x64-windows-static@4.4.0 to 1 binary cache(s) in the background
+Elapsed time to handle toml11:x64-windows-static: 7 s
+Completed submission of sqlite3[core,json1]:x64-windows-static@3.53.4 to 1 binary cache(s) in 710 ms
+Installing 12/12 xbyak:x64-windows-static@7.28...
+xbyak:x64-windows-static@7.28 package ABI: 17e369f1c25819857ab9f5d4c412b28f6660f03afd4cbba94c635dfdfd5d0cf9
+Building xbyak:x64-windows-static@7.28...
+C:\Users\runneradmin\AppData\Local\vcpkg\registries\git-trees\fe843e85888a7fa80dddd77627ee4f0572fbd9b4: info: installing from git registry git+https://github.com/microsoft/vcpkg@fe843e85888a7fa80dddd77627ee4f0572fbd9b4
+Downloading https://github.com/herumi/xbyak/archive/v7.28.tar.gz -> herumi-xbyak-v7.28.tar.gz
+Successfully downloaded herumi-xbyak-v7.28.tar.gz
+-- Extracting source C:/vcpkg/downloads/herumi-xbyak-v7.28.tar.gz
+-- Using source at C:/vcpkg/buildtrees/xbyak/src/v7.28-a06d7369c4.clean
+-- Configuring x64-windows-static
+-- Building x64-windows-static-dbg
+-- Building x64-windows-static-rel
+-- Installing: C:/vcpkg/packages/xbyak_x64-windows-static/share/xbyak/copyright
+-- Performing post-build validation
+Starting submission of xbyak:x64-windows-static@7.28 to 1 binary cache(s) in the background
+Elapsed time to handle xbyak:x64-windows-static: 3.3 s
+Installed contents are licensed to you by owners. Microsoft is not responsible for, nor does it grant any licenses to, third-party packages.
+Packages installed in this vcpkg installation declare the following licenses:
+BSD-3-Clause
+MIT
+blessing
+The DirectXMath package provides CMake targets:
+
+    find_package(directxmath CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Microsoft::DirectXMath)
+
+The DirectX Tool Kit for DX11 package provides CMake targets:
+
+    find_package(directxtk CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Microsoft::DirectXTK)
+
+The package fmt provides CMake targets:
+
+    find_package(fmt CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE fmt::fmt)
+
+    # Or use the header-only version
+    find_package(fmt CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE fmt::fmt-header-only)
+
+The package nlohmann-json provides CMake targets:
+
+    find_package(nlohmann_json CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE nlohmann_json::nlohmann_json)
+
+The package nlohmann-json can be configured to not provide implicit conversions via a custom triplet file:
+
+    set(nlohmann-json_IMPLICIT_CONVERSIONS OFF)
+
+For more information, see the docs here:
+    
+    https://json.nlohmann.me/api/macros/json_use_implicit_conversions/
+
+rapidcsv provides CMake targets:
+
+  # this is heuristically generated, and may not be correct
+  find_package(rapidcsv CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE rapidcsv::rapidcsv)
+
+simpleini provides CMake targets:
+
+  # this is heuristically generated, and may not be correct
+  find_package(SimpleIni CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE SimpleIni::SimpleIni)
+
+The package spdlog provides CMake targets:
+
+    find_package(spdlog CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE spdlog::spdlog)
+
+    # Or use the header-only version
+    find_package(spdlog CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE spdlog::spdlog_header_only)
+
+sqlite3 provides pkgconfig bindings.
+sqlite3 provides CMake targets:
+
+    find_package(unofficial-sqlite3 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::sqlite3::sqlite3)
+
+toml11 provides CMake targets:
+
+  # this is heuristically generated, and may not be correct
+  find_package(toml11 CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE toml11::toml11)
+
+xbyak provides CMake targets:
+
+  # this is heuristically generated, and may not be correct
+  find_package(xbyak CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE xbyak::xbyak)
+
+Completed submission of toml11:x64-windows-static@4.4.0 to 1 binary cache(s) in 66.1 ms
+Waiting for 1 remaining binary cache submissions...
+Completed submission of xbyak:x64-windows-static@7.28 to 1 binary cache(s) in 59.2 ms (1/1)
+All requested installations completed successfully in: 2.1 min

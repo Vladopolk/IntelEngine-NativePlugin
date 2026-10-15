@@ -1,0 +1,80 @@
+    https://json.nlohmann.me/api/macros/json_use_implicit_conversions/
+
+rapidcsv provides CMake targets:
+
+  # this is heuristically generated, and may not be correct
+  find_package(rapidcsv CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE rapidcsv::rapidcsv)
+
+simpleini provides CMake targets:
+
+  # this is heuristically generated, and may not be correct
+  find_package(SimpleIni CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE SimpleIni::SimpleIni)
+
+The package spdlog provides CMake targets:
+
+    find_package(spdlog CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE spdlog::spdlog)
+
+    # Or use the header-only version
+    find_package(spdlog CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE spdlog::spdlog_header_only)
+
+sqlite3 provides pkgconfig bindings.
+sqlite3 provides CMake targets:
+
+    find_package(unofficial-sqlite3 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::sqlite3::sqlite3)
+
+toml11 provides CMake targets:
+
+  # this is heuristically generated, and may not be correct
+  find_package(toml11 CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE toml11::toml11)
+
+xbyak provides CMake targets:
+
+  # this is heuristically generated, and may not be correct
+  find_package(xbyak CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE xbyak::xbyak)
+
+Completed submission of toml11:x64-windows-static@4.4.0 to 1 binary cache(s) in 66.1 ms
+Waiting for 1 remaining binary cache submissions...
+Completed submission of xbyak:x64-windows-static@7.28 to 1 binary cache(s) in 59.2 ms (1/1)
+All requested installations completed successfully in: 2.1 min
+-- Running vcpkg install - done
+-- The CXX compiler identification is MSVC 19.44.35229.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+Options:
+	Enable Xbyak: OFF
+	Enable Patch Safety Checks: ON
+	Enable Skyrim SE: ON
+	Enable Skyrim AE: ON
+	Enable Skyrim VR: OFF
+	Build Tests: OFF
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - not found
+-- Found Threads: TRUE
+-- The C compiler identification is MSVC 19.44.35229.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Found nlohmann_json: D:/a/IntelEngine-NativePlugin/IntelEngine-NativePlugin/SKSE/build/vcpkg_installed/x64-windows-static/share/nlohmann_json/nlohmann_jsonConfig.cmake (found version "3.12.0")
+Parsing commonlibsse_plugin_version 3.5.0
+Setting major version to 3
+Setting minor version to 5
+Parsing ADD_COMMONLIBSSE_PLUGIN_MINIMUM_SKSE_VERSION 0
+-- Configuring done (212.8s)
+-- Generating done (0.2s)
+-- Build files have been written to: D:/a/IntelEngine-NativePlugin/IntelEngine-NativePlugin/SKSE/build
