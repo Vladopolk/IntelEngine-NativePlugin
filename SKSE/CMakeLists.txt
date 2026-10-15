@@ -85,6 +85,9 @@ target_link_libraries(
         unofficial::sqlite3::sqlite3
 )
 
+# Windows.h defines min/max macros which break std::min / numeric_limits<T>::max()
+target_compile_definitions(${PROJECT_NAME} PRIVATE NOMINMAX WIN32_LEAN_AND_MEAN)
+
 target_precompile_headers(
     ${PROJECT_NAME}
     PRIVATE
