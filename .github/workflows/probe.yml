@@ -1,0 +1,43 @@
+name: Probe CommonLib forks
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "probe/**" ]
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Query candidates
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p out && R=out/probe.txt
+          for r in libxse/commonlibsse-ng alandtse/CommonLibVR alandtse/CommonLibSSE-NG CharmedBaryon/CommonLibSSE-NG powerof3/CommonLibSSE; do
+            echo "=== $r" >> $R
+            gh api repos/$r --jq '"default=\(.default_branch) pushed=\(.pushed_at) license=\(.license.spdx_id) archived=\(.archived) stars=\(.stargazers_count)"' >> $R 2>&1 || true
+            echo "-- tags" >> $R
+            gh api repos/$r/tags --jq '.[0:6]|map(.name)|join(", ")' >> $R 2>&1 || true
+            echo "-- releases" >> $R
+            gh api repos/$r/releases --jq '.[0:4]|map("\(.tag_name) \(.published_at)")|join(" | ")' >> $R 2>&1 || true
+            echo "-- commits mentioning 1.7" >> $R
+            gh api "search/commits?q=repo:$r+1.7&per_page=5" --jq '.items[]|"\(.sha[0:7]) \(.commit.committer.date[0:10]) \(.commit.message|split("\n")[0])"' >> $R 2>&1 || true
+            echo "-- root files" >> $R
+            gh api repos/$r/contents --jq 'map(.name)|join(" ")' >> $R 2>&1 || true
+          done
+          for f in "MinLL/SkyrimNet-GamePlugin" "KrisV-777/Mfg-Fix-NG" "codepuncher/InventoryInjectorImproved"; do
+            echo "=== $f (consumer)" >> $R
+            for p in vcpkg.json vcpkg-configuration.json CMakeLists.txt .gitmodules xmake.lua; do
+              echo "-- $p" >> $R
+              gh api repos/$f/contents/$p --jq '.content|@base64d' 2>/dev/null | head -60 >> $R || true
+            done
+          done
+      - name: Publish
+        run: |
+          cd out && git init -q && git config user.name ci && git config user.email ci@users.noreply.github.com
+          git checkout -q -b ci-artifacts && git add -A && git commit -q -m "probe"
+          git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" ci-artifacts
